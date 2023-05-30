@@ -20,16 +20,18 @@ public class PersonServiceImpl implements PersonService {
 
 
     return Single.just(personResponse)
-        .map(p -> {
-          if (p.getDocument().equals("00000000")){
-            throw new GeneralError("TL0001", "DNI");
-          }
-          p.setName(p.getName() + " apellido");
-          return p;
-        })
+        .flatMap(p -> validatePerson(p))
         .onErrorResumeNext(error -> {
           log.error("<<<< error >>>> {}", error);
           return null;
         });
+  }
+
+  private Single<PersonModel> validatePerson (PersonModel personModel) {
+    if (personModel.getDocument().equals("00000000")) {
+      return Single.error(new GeneralError("E001", "DNI BLOCK"));
+      //throw new GeneralError("E001", "DNI BLOCK");
+    }
+    return Single.just(personModel);
   }
 }
