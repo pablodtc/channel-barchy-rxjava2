@@ -6,12 +6,14 @@ import io.reactivex.Single;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
-//@ControllerAdvice
+@ControllerAdvice
 @Slf4j
 public class WebControllerAdvice {
 
-  //@ExceptionHandler(GeneralError.class)
+  @ExceptionHandler(GeneralError.class)
   public ResponseEntity<Single<ApiResponse<?>>> handleUnhandledExceptions(GeneralError error) {
     log.error("Ocurrio un error no controlado", error);
     ApiResponse<?> apiResponse = ApiResponse.builder()
